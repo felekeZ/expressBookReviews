@@ -1,24 +1,10 @@
-/**
- * General Routes Module - Handles public endpoints for book browsing
- * This module contains all public-facing routes that don't require authentication
- */
-
 const express = require('express');
-const axios = require('axios'); // HTTP client for making external API calls
+const axios = require('axios');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
-// ==================== USER REGISTRATION ====================
-
-/**
- * Register a new user account
- * @route POST /register
- * @param {string} username - User's chosen username
- * @param {string} password - User's password
- * @returns {Object} Success or error message
- */
 public_users.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -44,14 +30,6 @@ public_users.post("/register", (req, res) => {
     });
 });
 
-// ==================== TASK 10: GET ALL BOOKS ====================
-
-/**
- * Retrieve the complete list of books from the shop
- * Uses Async-Await pattern with Promise wrapper for async operation
- * @route GET /
- * @returns {Object} JSON object containing all books
- */
 public_users.get('/', async function (req, res) {
     try {
         // Wrap the synchronous books object in a Promise to simulate async API call
@@ -79,15 +57,6 @@ public_users.get('/', async function (req, res) {
     }
 });
 
-// ==================== TASK 11: GET BOOK BY ISBN ====================
-
-/**
- * Retrieve a specific book using its ISBN number
- * Uses Async-Await pattern for asynchronous operation
- * @route GET /isbn/:isbn
- * @param {string} isbn - The ISBN identifier of the book
- * @returns {Object} Book details including title, author, and reviews
- */
 public_users.get('/isbn/:isbn', async function (req, res) {
     try {
         const isbn = req.params.isbn;
@@ -113,15 +82,6 @@ public_users.get('/isbn/:isbn', async function (req, res) {
     }
 });
 
-// ==================== TASK 12: GET BOOKS BY AUTHOR ====================
-
-/**
- * Find all books written by a specific author
- * Performs case-insensitive search by author name
- * @route GET /author/:author
- * @param {string} author - The author's name to search for
- * @returns {Array} List of books matching the author
- */
 public_users.get('/author/:author', async function (req, res) {
     try {
         const authorName = req.params.author;
@@ -166,15 +126,6 @@ public_users.get('/author/:author', async function (req, res) {
     }
 });
 
-// ==================== TASK 13: GET BOOKS BY TITLE ====================
-
-/**
- * Find all books with a specific title (case-insensitive)
- * Note: Multiple books could have the same title in different editions
- * @route GET /title/:title
- * @param {string} title - The book title to search for
- * @returns {Array} List of books matching the title
- */
 public_users.get('/title/:title', async function (req, res) {
     try {
         const bookTitle = req.params.title;
@@ -219,15 +170,6 @@ public_users.get('/title/:title', async function (req, res) {
     }
 });
 
-// ==================== TASK 5: GET BOOK REVIEWS ====================
-
-/**
- * Retrieve all reviews for a specific book
- * This endpoint remains synchronous as it's a simple lookup
- * @route GET /review/:isbn
- * @param {string} isbn - The ISBN of the book
- * @returns {Object} All reviews for the requested book
- */
 public_users.get('/review/:isbn', function (req, res) {
     const isbn = req.params.isbn;
     const book = books[isbn];
@@ -245,5 +187,4 @@ public_users.get('/review/:isbn', function (req, res) {
     }
 });
 
-// Export the router for use in the main application
 module.exports.general = public_users;
